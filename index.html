@@ -3,25 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f2f4f8;
+}
+
+.container{
+    width:100%;
+    max-width:420px;
+    margin:20px auto;
+    background:#ffffff;
+    padding:20px;
+    border-radius:14px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+label{
+    font-size:14px;
+    font-weight:bold;
+    margin-top:12px;
+    display:block;
+}
+
+input, select{
+    width:100%;
+    padding:12px;
+    margin-top:6px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:14px;
+    background:white;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    margin-top:20px;
+    background:#2AABEE;
+    color:white;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:bold;
+}
+
+button:active{
+    opacity:0.85;
+}
+</style>
 </head>
-<body style="font-family: Arial; text-align:center; padding:30px;">
 
-<h2>Form nhập API</h2>
+<body>
 
-<input id="apikey" placeholder="Nhập API Key" style="padding:10px;width:80%;"><br><br>
+<div class="container">
+<h2>Form Nhập Thông Tin</h2>
 
-<button onclick="sendData()" style="padding:10px 20px;">
-Gửi
-</button>
+<label>Model</label>
+<input id="model">
+
+<label>Serial</label>
+<input id="serial">
+
+<label>Tên cơ sở</label>
+<input id="coso">
+
+<label>Địa chỉ</label>
+<input id="diachi">
+
+<label>Ngày HC</label>
+<input id="ngayhc" type="date">
+
+<label>Ngày HĐ</label>
+<input id="ngayhd" type="date">
+
+<label>Chọn loại Fix</label>
+<select id="fix">
+    <option>Fix 1</option>
+    <option>Fix 2</option>
+    <option>Fix 3</option>
+</select>
+
+<label>Xuất file</label>
+<select id="filetype">
+    <option>xlsx</option>
+    <option>lock</option>
+    <option>pdf</option>
+</select>
+
+<button onclick="sendData()">Gửi</button>
+
+</div>
 
 <script>
-function sendData() {
-    let key = document.getElementById("apikey").value;
+Telegram.WebApp.expand();
 
-    Telegram.WebApp.sendData(JSON.stringify({
-        apikey: key
-    }));
+function sendData(){
+    let data = {
+        model: model.value,
+        serial: serial.value,
+        coso: coso.value,
+        diachi: diachi.value,
+        ngayhc: ngayhc.value,
+        ngayhd: ngayhd.value,
+        fix: fix.value,
+        filetype: filetype.value
+    };
 
+    Telegram.WebApp.sendData(JSON.stringify(data));
     Telegram.WebApp.close();
 }
 </script>
