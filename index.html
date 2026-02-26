@@ -2,7 +2,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 *{
@@ -18,7 +17,7 @@ body{
 
 .container{
     width:100%;
-    max-width:420px;
+    max-width:480px;
     margin:20px auto;
     background:#ffffff;
     padding:20px;
@@ -32,26 +31,39 @@ h2{
 }
 
 label{
-    font-size:14px;
+    font-size:13px;
     font-weight:bold;
-    margin-top:12px;
+    margin-bottom:4px;
     display:block;
 }
 
 input, select{
     width:100%;
-    padding:12px;
-    margin-top:6px;
+    padding:10px;
     border:1px solid #ccc;
     border-radius:8px;
     font-size:14px;
     background:white;
 }
 
+.row{
+    display:flex;
+    gap:12px;
+    margin-bottom:12px;
+}
+
+.col{
+    flex:1;
+}
+
+.single{
+    margin-bottom:12px;
+}
+
 button{
     width:100%;
     padding:14px;
-    margin-top:20px;
+    margin-top:16px;
     background:#2AABEE;
     color:white;
     border:none;
@@ -60,8 +72,14 @@ button{
     font-weight:bold;
 }
 
-button:active{
-    opacity:0.85;
+.result{
+    margin-top:20px;
+    padding:15px;
+    background:#f9fafc;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:14px;
+    white-space:pre-line;
 }
 </style>
 </head>
@@ -69,62 +87,137 @@ button:active{
 <body>
 
 <div class="container">
-<h2>Form Nhập Thông Tin</h2>
+<h2>Thông Tin Hiệu Chuẩn</h2>
 
-<label>Model</label>
-<input id="model">
-
-<label>Serial</label>
-<input id="serial">
-
-<label>Tên cơ sở</label>
-<input id="coso">
-
-<label>Địa chỉ</label>
-<input id="diachi">
-
-<label>Ngày HC</label>
-<input id="ngayhc" type="date">
-
-<label>Ngày HĐ</label>
-<input id="ngayhd" type="date">
-
-<label>Chọn loại Fix</label>
-<select id="fix">
-    <option>Fix 1</option>
-    <option>Fix 2</option>
-    <option>Fix 3</option>
+<div class="single">
+<label>Chọn mẫu</label>
+<select id="loadfile">
+    <option value="">-- Chọn mẫu --</option>
+    <option value="530-312">530-312</option>
 </select>
+</div>
 
-<label>Xuất file</label>
+<div class="row">
+    <div class="col">
+        <label>Tên đối tượng</label>
+        <input id="ten">
+    </div>
+    <div class="col">
+        <label>Nơi sản xuất</label>
+        <input id="nsx">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label>Model</label>
+        <input id="model">
+    </div>
+    <div class="col">
+        <label>Serial</label>
+        <input id="serial">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label>Số (No)</label>
+        <input id="so">
+    </div>
+    <div class="col">
+        <label>Mã QL</label>
+        <input id="maql">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label>Phạm vi đo</label>
+        <input id="phamvi">
+    </div>
+    <div class="col">
+        <label>Độ phân giải</label>
+        <input id="dophangiai">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label>Ngày HC</label>
+        <input id="ngayhc" type="date">
+    </div>
+    <div class="col">
+        <label>Ngày HC tới</label>
+        <input id="ngayhctoi" type="date">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label>Ngày ký</label>
+        <input id="ngayky" type="date">
+    </div>
+    <div class="col">
+        <label>Nơi HC</label>
+        <input id="noihc">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label>Tên cơ sở</label>
+        <input id="coso">
+    </div>
+    <div class="col">
+        <label>Địa chỉ</label>
+        <input id="diachi">
+    </div>
+</div>
+
+<div class="single">
+<label>Chức năng</label>
 <select id="filetype">
-    <option>xlsx</option>
-    <option>lock</option>
-    <option>pdf</option>
+    <option value="">-- Chọn --</option>
+    <option value="xlsx">xlsx</option>
+    <option value="lock">lock</option>
+    <option value="pdf">pdf</option>
 </select>
+</div>
 
 <button onclick="sendData()">Gửi</button>
+
+<div id="result" class="result" style="display:none;"></div>
 
 </div>
 
 <script>
-Telegram.WebApp.expand();
 
 function sendData(){
-    let data = {
-        model: model.value,
-        serial: serial.value,
-        coso: coso.value,
-        diachi: diachi.value,
-        ngayhc: ngayhc.value,
-        ngayhd: ngayhd.value,
-        fix: fix.value,
-        filetype: filetype.value
-    };
 
-    Telegram.WebApp.sendData(JSON.stringify(data));
-    Telegram.WebApp.close();
+    let data = `
+Chọn mẫu: ${loadfile.value}
+Tên đối tượng: ${ten.value}
+Nơi sản xuất: ${nsx.value}
+Model: ${model.value}
+Serial: ${serial.value}
+Số (No): ${so.value}
+Mã QL: ${maql.value}
+Phạm vi đo: ${phamvi.value}
+Độ phân giải: ${dophangiai.value}
+Ngày HC: ${ngayhc.value}
+Ngày HC tới: ${ngayhctoi.value}
+Ngày ký: ${ngayky.value}
+Nơi HC: ${noihc.value}
+Tên cơ sở: ${coso.value}
+Địa chỉ: ${diachi.value}
+Loại file: ${filetype.value}
+    `;
+
+    let resultBox = document.getElementById("result");
+    resultBox.style.display = "block";
+    resultBox.innerText = data;
 }
+
 </script>
 
 </body>
