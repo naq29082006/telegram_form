@@ -95,9 +95,7 @@ font-weight:bold;
 
 <div class="single">
 <label>Chọn mẫu</label>
-<select id="loadfile">
-<option value="">-- Chọn mẫu --</option>
-<option value="530-312">530-312</option>
+<select id="loadfile"><option value="" selected hidden>-- Chọn mẫu Cert --</option>
 </select>
 </div>
 
@@ -188,7 +186,7 @@ font-weight:bold;
 <div class="single">
 <label>Chức năng</label>
 <select id="filetype">
-<option value="">-- Chọn --</option>
+<option value="" disabled selected>-- Chọn --</option>
 <option value="xlsx">xlsx</option>
 <option value="lock">lock</option>
 <option value="pdf">pdf</option>
@@ -198,9 +196,117 @@ font-weight:bold;
 <button onclick="sendData()">Gửi</button>
 
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.8.6/jsrsasign-all-min.js"></script>
 <script>
+const credentials = {
+"type":"service_account",
+"project_id":"midyear-guild-448806-d7",
+"private_key":`-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDANzl5Qb1ijuRe
+t2+xPq2wxmQoGkQYxSAWL324hfY/Oji+OFz4w0lYTe2TUSeigVmrvl1isWVoBQd0
+lGtM1xv4GYxKMi9rpfFBsnBi9mX2HHUQbwcHWkaY9oEB68DU796r5UEeGak0FU5T
+qmc19YFxlvEcqAR1dj9+lMhF6ZXsFvNhyYpsX3Evpdi0NywnsKpNqplyEtvJgmRL
+KlGXcFRhCOzR11UZGx/TZIl4nO7SviXunkh4dTXKG0/bgyuLbHJMu79E5fZ8fpHR
+4FmvrYaI4EJ4xRSB99Dhv3DOVQIrF44UMfpjQ7e77dehO20GcqjooygLNbkzW0iR
+TapMfTPNAgMBAAECggEABEf2mWhzww3dsO0IVCafkGVgIQiHZb8rj3LwAOZy7UZA
+XJ7oFd5Q9DeKyBIxqMvqvF7ZY55XMjGSe0U8UpIj8asCqzsM6qqKgg/AXbk73Mxr
+dbnoqoBB5vGZPqVf6R436RTfwL+KO4+8lokgErKXdyPegOiObjNRB2JhnN+uqCXH
+cIDNb26Hmnb8HyhZAJUGmRrMwZXGjq5tmre1O6FJwV8NuywAfY0/2k90BhQW/Lwb
+cfJgfPe1CMMsdHtpvAmPnI9NJhDRcZi+XJp5S2jNXQdvWlOICaS/3u9dGT7juquX
+0fIf0ObIfo3XETQm7UAmQ/2R4dtSaryp1XEE8cvPwQKBgQD3dNrQEIHkL1iFsYW1
+95L3XzjTF1GUfV6OqpZ7V7o6GzClYQF0g7SahrTra1KIUeb+ilY0Wf8r99XmR2n9
+mHVcGmXu9UX+fkOrIQSEA3OLLI8N1SKpSJS4oWNMT3oKIEULnLagyHHfQuB7T6C/
+C3XpDvZ2fDutAAqHx2iKNeRgfQKBgQDG2h/Jk3fDqbw9EA6Pzl1UyV5y3QeGARQs
+4juR2VBBNYJh01SQC1yR4ytDDVREzVlfgTFC08W4XI2Sy5nQVS+fFzmC5ylDKNCv
+Ym7hrX7jes+H7eZnRs/bzL3iGBVRNrp0ZmvIYi7Yh9ezl9XvnqoNwQhw4mxKZHeH
+iX84B/dRkQKBgEdixITlXjNPnT/kOGiIJTOLmr76qSQnDpIlkAfBBQ4iLeRnmZ3d
+KMqzNZn8efCtf+/KRJgRplUux9wImgD4bFLHosROqYSDNE431i+nNzvc/N/Grpsb
+PxwMIrMu8kvdh02URfMYIBGCH3QzQnIagkdbc6o2qJh9vIvy8Kt+ZIWZAoGBAK8K
+75Rn5bMtRPCTo93fELVEFYoTGz5Q0Mu50ipPG6BrU/x9JSEvfytEx55cq2NtSFET
+zqM++/uQLWedJicH9cWbkhqzFdVyplDc2zJ5oQrp3qmPN5SN9wdLMZNHE+zLulIg
+npxkIUymN7B15fLqvlMhKycDicPqsHV1CbHvATyhAoGAXOB45jjNS1Huvy9d6RPY
+c9FrAt/AAByAMkiliCXrkyMN2al9p/ZusuqnGQfffXGDMdmFvYyrgaxMQ25a3I7y
+D7M+B9yce1xHwGzHYz4Cmq06jlmS1brTzqJMS1neDDxxI/smKthZidc9OvwQdwEZ
+ffJU+FTAwmzjoWcrqxPg694=
+-----END PRIVATE KEY-----`,
+"client_email":"demo-46@midyear-guild-448806-d7.iam.gserviceaccount.com"
+};
 
+const folderId="1sA7xwc_yddEIcOQzherT8a0rKYJTWCYh";
+
+async function getToken()
+{
+
+const header={alg:"RS256",typ:"JWT"};
+
+const now=Math.floor(Date.now()/1000);
+
+const payload={
+iss:credentials.client_email,
+scope:"https://www.googleapis.com/auth/drive.readonly",
+aud:"https://oauth2.googleapis.com/token",
+iat:now,
+exp:now+3600
+};
+
+const jwt=KJUR.jws.JWS.sign(
+"RS256",
+JSON.stringify(header),
+JSON.stringify(payload),
+credentials.private_key
+);
+
+const res=await fetch("https://oauth2.googleapis.com/token",{
+method:"POST",
+headers:{"Content-Type":"application/x-www-form-urlencoded"},
+body:"grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion="+jwt
+});
+
+const data=await res.json();
+
+return data.access_token;
+
+}
+
+async function loadFiles()
+{
+
+const token=await getToken();
+
+const url="https://www.googleapis.com/drive/v3/files?q='"+folderId+"' in parents and mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'&fields=files(id,name)&pageSize=1000";
+
+const res=await fetch(url,{
+headers:{Authorization:"Bearer "+token}
+});
+
+const data=await res.json();
+
+const combo=document.getElementById("loadfile");
+
+combo.innerHTML="";
+// thêm các file từ drive
+let first = document.createElement("option");
+first.text = "-- Chọn mẫu Cert --";
+first.value = "";
+first.selected = true;
+first.disabled = true;
+
+combo.appendChild(first);
+
+// thêm file
+for(let i = 0; i < data.files.length; i++)
+{
+    let op = document.createElement("option");
+
+    op.value = data.files[i].id;
+    op.text  = data.files[i].name;
+
+    combo.appendChild(op);
+}
+
+}
+
+loadFiles();
 let tg = window.Telegram.WebApp
 tg.expand()
 
@@ -216,6 +322,24 @@ document.getElementById("userinfo").innerHTML =
 "🆔 Chat ID: "+chat_id
 
 function sendData(){
+
+
+    let combo = document.getElementById("loadfile").value;
+    let filetype = document.getElementById("filetype").value;
+
+    if(combo == "")
+    {
+        alert("Vui lòng chọn mẫu");
+        return;
+    }
+
+    if(filetype == "")
+    {
+        alert("Vui lòng chọn loại file");
+        return;
+    }
+
+
 
 let text =
 "📋 FORM HIỆU CHUẨN\n\n"+
