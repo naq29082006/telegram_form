@@ -211,8 +211,8 @@ let username = user.username || ""
 let fullname = (user.first_name || "") + " " + (user.last_name || "")
 
 document.getElementById("userinfo").innerHTML =
-"👤 Người dùng: <b>"+firstname+"</b><br>"+
-"🔗 Username: @"+fullname+"<br>"+
+"👤 Người dùng: <b>"+fullname+"</b><br>"+
+"🔗 Username: @"+username+"<br>"+
 "🆔 Chat ID: "+chat_id
 
 function sendData(){
