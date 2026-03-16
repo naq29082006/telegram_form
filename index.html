@@ -208,11 +208,11 @@ let user = tg.initDataUnsafe.user || {}
 
 let chat_id = user.id || ""
 let username = user.username || ""
-let firstname = user.first_name || ""
+let fullname = (user.first_name || "") + " " + (user.last_name || "")
 
 document.getElementById("userinfo").innerHTML =
 "👤 Người dùng: <b>"+firstname+"</b><br>"+
-"🔗 Username: @"+username+"<br>"+
+"🔗 Username: @"+fullname+"<br>"+
 "🆔 Chat ID: "+chat_id
 
 function sendData(){
