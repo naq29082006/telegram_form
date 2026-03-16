@@ -3,219 +3,254 @@
 <head>
 <meta charset="UTF-8">
 
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <style>
 *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+box-sizing:border-box;
+margin:0;
+padding:0;
 }
 
 body{
-    font-family: Arial, sans-serif;
-    background:#f2f4f8;
+font-family: Arial, sans-serif;
+background:#f2f4f8;
 }
 
 .container{
-    width:100%;
-    max-width:480px;
-    margin:20px auto;
-    background:#ffffff;
-    padding:20px;
-    border-radius:14px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+width:100%;
+max-width:480px;
+margin:20px auto;
+background:#ffffff;
+padding:20px;
+border-radius:14px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.userbox{
+background:#e8f4ff;
+padding:10px;
+border-radius:8px;
+margin-bottom:15px;
+font-size:14px;
 }
 
 h2{
-    text-align:center;
-    margin-bottom:20px;
+text-align:center;
+margin-bottom:20px;
 }
 
 label{
-    font-size:13px;
-    font-weight:bold;
-    margin-bottom:4px;
-    display:block;
+font-size:13px;
+font-weight:bold;
+margin-bottom:4px;
+display:block;
 }
 
 input, select{
-    width:100%;
-    padding:10px;
-    border:1px solid #ccc;
-    border-radius:8px;
-    font-size:14px;
-    background:white;
+width:100%;
+padding:10px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:14px;
+background:white;
 }
 
 .row{
-    display:flex;
-    gap:12px;
-    margin-bottom:12px;
+display:flex;
+gap:12px;
+margin-bottom:12px;
 }
 
 .col{
-    flex:1;
+flex:1;
 }
 
 .single{
-    margin-bottom:12px;
+margin-bottom:12px;
 }
 
 button{
-    width:100%;
-    padding:14px;
-    margin-top:16px;
-    background:#2AABEE;
-    color:white;
-    border:none;
-    border-radius:10px;
-    font-size:16px;
-    font-weight:bold;
-}
-
-.result{
-    margin-top:20px;
-    padding:15px;
-    background:#f9fafc;
-    border:1px solid #ddd;
-    border-radius:10px;
-    font-size:14px;
-    white-space:pre-line;
+width:100%;
+padding:14px;
+margin-top:16px;
+background:#2AABEE;
+color:white;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:bold;
 }
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
+
+<div id="userinfo" class="userbox"></div>
+
 <h2>Thông Tin Hiệu Chuẩn</h2>
 
 <div class="single">
 <label>Chọn mẫu</label>
 <select id="loadfile">
-    <option value="">-- Chọn mẫu --</option>
-    <option value="530-312">530-312</option>
+<option value="">-- Chọn mẫu --</option>
+<option value="530-312">530-312</option>
 </select>
 </div>
 
 <div class="row">
-    <div class="col">
-        <label>Tên đối tượng</label>
-        <input id="ten">
-    </div>
-    <div class="col">
-        <label>Nơi sản xuất</label>
-        <input id="nsx">
-    </div>
+<div class="col">
+<label>Tên đối tượng</label>
+<input id="ten">
+</div>
+
+<div class="col">
+<label>Nơi sản xuất</label>
+<input id="nsx">
+</div>
 </div>
 
 <div class="row">
-    <div class="col">
-        <label>Model</label>
-        <input id="model">
-    </div>
-    <div class="col">
-        <label>Serial</label>
-        <input id="serial">
-    </div>
+<div class="col">
+<label>Model</label>
+<input id="model">
+</div>
+
+<div class="col">
+<label>Serial</label>
+<input id="serial">
+</div>
 </div>
 
 <div class="row">
-    <div class="col">
-        <label>Số (No)</label>
-        <input id="so">
-    </div>
-    <div class="col">
-        <label>Mã QL</label>
-        <input id="maql">
-    </div>
+<div class="col">
+<label>Số (No)</label>
+<input id="so">
+</div>
+
+<div class="col">
+<label>Mã QL</label>
+<input id="maql">
+</div>
 </div>
 
 <div class="row">
-    <div class="col">
-        <label>Phạm vi đo</label>
-        <input id="phamvi">
-    </div>
-    <div class="col">
-        <label>Độ phân giải</label>
-        <input id="dophangiai">
-    </div>
+<div class="col">
+<label>Phạm vi đo</label>
+<input id="phamvi">
+</div>
+
+<div class="col">
+<label>Độ phân giải</label>
+<input id="dophangiai">
+</div>
 </div>
 
 <div class="row">
-    <div class="col">
-        <label>Ngày HC</label>
-        <input id="ngayhc" type="date">
-    </div>
-    <div class="col">
-        <label>Ngày HC tới</label>
-        <input id="ngayhctoi" type="date">
-    </div>
+<div class="col">
+<label>Ngày HC</label>
+<input id="ngayhc" type="date">
+</div>
+
+<div class="col">
+<label>Ngày HC tới</label>
+<input id="ngayhctoi" type="date">
+</div>
 </div>
 
 <div class="row">
-    <div class="col">
-        <label>Ngày ký</label>
-        <input id="ngayky" type="date">
-    </div>
-    <div class="col">
-        <label>Nơi HC</label>
-        <input id="noihc">
-    </div>
+<div class="col">
+<label>Ngày ký</label>
+<input id="ngayky" type="date">
+</div>
+
+<div class="col">
+<label>Nơi HC</label>
+<input id="noihc">
+</div>
 </div>
 
 <div class="row">
-    <div class="col">
-        <label>Tên cơ sở</label>
-        <input id="coso">
-    </div>
-    <div class="col">
-        <label>Địa chỉ</label>
-        <input id="diachi">
-    </div>
+<div class="col">
+<label>Tên cơ sở</label>
+<input id="coso">
+</div>
+
+<div class="col">
+<label>Địa chỉ</label>
+<input id="diachi">
+</div>
 </div>
 
 <div class="single">
 <label>Chức năng</label>
 <select id="filetype">
-    <option value="">-- Chọn --</option>
-    <option value="xlsx">xlsx</option>
-    <option value="lock">lock</option>
-    <option value="pdf">pdf</option>
+<option value="">-- Chọn --</option>
+<option value="xlsx">xlsx</option>
+<option value="lock">lock</option>
+<option value="pdf">pdf</option>
 </select>
 </div>
 
 <button onclick="sendData()">Gửi</button>
 
-<div id="result" class="result" style="display:none;"></div>
-
 </div>
 
 <script>
 
+let tg = window.Telegram.WebApp
+tg.expand()
+
+let user = tg.initDataUnsafe.user || {}
+
+let chat_id = user.id || ""
+let username = user.username || ""
+let firstname = user.first_name || ""
+
+document.getElementById("userinfo").innerHTML =
+"👤 Người dùng: <b>"+firstname+"</b><br>"+
+"🔗 Username: @"+username+"<br>"+
+"🆔 Chat ID: "+chat_id
+
 function sendData(){
 
-    let data = `
-Chọn mẫu: ${loadfile.value}
-Tên đối tượng: ${ten.value}
-Nơi sản xuất: ${nsx.value}
-Model: ${model.value}
-Serial: ${serial.value}
-Số (No): ${so.value}
-Mã QL: ${maql.value}
-Phạm vi đo: ${phamvi.value}
-Độ phân giải: ${dophangiai.value}
-Ngày HC: ${ngayhc.value}
-Ngày HC tới: ${ngayhctoi.value}
-Ngày ký: ${ngayky.value}
-Nơi HC: ${noihc.value}
-Tên cơ sở: ${coso.value}
-Địa chỉ: ${diachi.value}
-Loại file: ${filetype.value}
-    `;
+let text =
+"📋 FORM HIỆU CHUẨN\n\n"+
+"Chọn mẫu: "+loadfile.value+"\n"+
+"Tên đối tượng: "+ten.value+"\n"+
+"Nơi sản xuất: "+nsx.value+"\n"+
+"Model: "+model.value+"\n"+
+"Serial: "+serial.value+"\n"+
+"Số (No): "+so.value+"\n"+
+"Mã QL: "+maql.value+"\n"+
+"Phạm vi đo: "+phamvi.value+"\n"+
+"Độ phân giải: "+dophangiai.value+"\n"+
+"Ngày HC: "+ngayhc.value+"\n"+
+"Ngày HC tới: "+ngayhctoi.value+"\n"+
+"Ngày ký: "+ngayky.value+"\n"+
+"Nơi HC: "+noihc.value+"\n"+
+"Tên cơ sở: "+coso.value+"\n"+
+"Địa chỉ: "+diachi.value+"\n"+
+"Loại file: "+filetype.value+"\n\n"+
+"User: @"+username+"\n"+
+"ID: "+chat_id
 
-    let resultBox = document.getElementById("result");
-    resultBox.style.display = "block";
-    resultBox.innerText = data;
+fetch("https://api.telegram.org/bot8798057505:AAFJXWFxx2YdPWme-3JDhiYEawFyCRJN788/sendMessage",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+chat_id:chat_id,
+text:text
+})
+})
+
+alert("Đã gửi form thành công!")
+
 }
 
 </script>
