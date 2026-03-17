@@ -343,7 +343,14 @@ window.sendData = async function(){
         return;
     }
 
+    let now = new Date();
 
+let time = now.getFullYear() + "-" +
+           String(now.getMonth()+1).padStart(2,'0') + "-" +
+           String(now.getDate()).padStart(2,'0') + " " +
+           String(now.getHours()).padStart(2,'0') + ":" +
+           String(now.getMinutes()).padStart(2,'0') + ":" +
+           String(now.getSeconds()).padStart(2,'0');
 
 let text =
 "📋 FORM HIỆU CHUẨN\n\n"+
@@ -363,6 +370,7 @@ let text =
 "Tên cơ sở: "+coso.value+"\n"+
 "Địa chỉ: "+diachi.value+"\n"+
 "Loại file: "+filetype+"\n"+
+"Time: "+time+"\n"+
 "User: @"+username+"\n"+
 "ID: "+chat_id
 
@@ -408,7 +416,8 @@ try {
   loai_file: filetype,
   username: username,
   chat_id: chat_id,
-  full_name:fullname
+  full_name:fullname,
+  time: time
 });
   } catch (e) {
     alert("Lỗi:", e);
