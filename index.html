@@ -325,7 +325,7 @@ document.getElementById("userinfo").innerHTML =
 "🔗 Username: @"+username+"<br>"+
 "🆔 Chat ID: "+chat_id
 
-function sendData(){
+window.sendData = async function(){
 
 
     let combo = document.getElementById("loadfile").value;
@@ -362,7 +362,7 @@ let text =
 "Nơi HC: "+noihc.value+"\n"+
 "Tên cơ sở: "+coso.value+"\n"+
 "Địa chỉ: "+diachi.value+"\n"+
-"Loại file: "+filetype.value+"\n\n"+
+"Loại file: "+filetype+"\n"+
 "User: @"+username+"\n"+
 "ID: "+chat_id
 
@@ -376,12 +376,20 @@ chat_id:chat_id,
 text:text
 })
 })
+const firebaseConfig = {
+  apiKey: "AIzaSyApzy_y_8NXU6U4U35rZsTQRvvsjQypVEE",
+  authDomain: "hip-beaker-448806-r2.firebaseapp.com",
+  projectId: "hip-beaker-448806-r2",
+  storageBucket: "hip-beaker-448806-r2.firebasestorage.app",
+  messagingSenderId: "920851338182",
+  appId: "1:920851338182:web:80a04235f1b529a4e658c7",
+  measurementId: "G-QPS1TDZLDF"
+};
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.add = async function () {
-  try {
-    await addDoc(collection(db, "Cert"), {
+try {
+ addDoc(collection(db, "Cert"), {
   mau: loadfile.value,
   ten_doi_tuong: ten.value,
   noi_san_xuat: nsx.value,
@@ -397,7 +405,7 @@ window.add = async function () {
   noi_hieu_chuan: noihc.value,
   ten_co_so: coso.value,
   dia_chi: diachi.value,
-  loai_file: filetype.value,
+  loai_file: filetype,
   username: username,
   chat_id: chat_id,
   full_name:fullname
@@ -406,7 +414,6 @@ window.add = async function () {
     alert("Lỗi:", e);
     return;
   }
-}
 alert("Đã gửi form thành công!")
 document.querySelectorAll("input").forEach(i => i.value = "")
 document.querySelectorAll("select").forEach(i => i.selectedIndex = 0)
