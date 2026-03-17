@@ -302,7 +302,7 @@ for(let i = 0; i < data.files.length; i++)
 {
     let op = document.createElement("option");
 
-    op.value = data.files[i].id;
+    op.value = data.files[i].name;
     op.text  = data.files[i].name;
 
     combo.appendChild(op);
@@ -347,7 +347,7 @@ function sendData(){
 
 let text =
 "📋 FORM HIỆU CHUẨN\n\n"+
-"Chọn mẫu: "+loadfile.text+"\n"+
+"Chọn mẫu: "+loadfile.value+"\n"+
 "Tên đối tượng: "+ten.value+"\n"+
 "Nơi sản xuất: "+nsx.value+"\n"+
 "Model: "+model.value+"\n"+
@@ -362,7 +362,7 @@ let text =
 "Nơi HC: "+noihc.value+"\n"+
 "Tên cơ sở: "+coso.value+"\n"+
 "Địa chỉ: "+diachi.value+"\n"+
-"Loại file: "+filetype.text+"\n\n"+
+"Loại file: "+filetype.value+"\n\n"+
 "User: @"+username+"\n"+
 "ID: "+chat_id
 
@@ -382,7 +382,7 @@ const db = getFirestore(app);
 window.add = async function () {
   try {
     await addDoc(collection(db, "Cert"), {
-  mau: loadfile.text,
+  mau: loadfile.value,
   ten_doi_tuong: ten.value,
   noi_san_xuat: nsx.value,
   model: model.value,
@@ -397,7 +397,7 @@ window.add = async function () {
   noi_hieu_chuan: noihc.value,
   ten_co_so: coso.value,
   dia_chi: diachi.value,
-  loai_file: filetype.text,
+  loai_file: filetype.value,
   username: username,
   chat_id: chat_id,
   full_name:fullname
