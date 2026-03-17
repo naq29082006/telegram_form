@@ -197,7 +197,11 @@ font-weight:bold;
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.8.6/jsrsasign-all-min.js"></script>
-<script>
+
+<script type="module">
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const credentials = {
 "type":"service_account",
 "project_id":"midyear-guild-448806-d7",
@@ -372,7 +376,37 @@ chat_id:chat_id,
 text:text
 })
 })
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
+window.add = async function () {
+  try {
+    await addDoc(collection(db, "Cert"), {
+  mau: loadfile.value,
+  ten_doi_tuong: ten.value,
+  noi_san_xuat: nsx.value,
+  model: model.value,
+  serial: serial.value,
+  so: so.value,
+  ma_ql: maql.value,
+  pham_vi_do: phamvi.value,
+  do_phan_giai: dophangiai.value,
+  ngay_hieu_chuan: ngayhc.value,
+  ngay_hc_toi: ngayhctoi.value,
+  ngay_ky: ngayky.value,
+  noi_hieu_chuan: noihc.value,
+  ten_co_so: coso.value,
+  dia_chi: diachi.value,
+  loai_file: filetype.value,
+  username: username,
+  chat_id: chat_id,
+  full_name:fullname
+});
+  } catch (e) {
+    alert("Lỗi:", e);
+    return;
+  }
+}
 alert("Đã gửi form thành công!")
 document.querySelectorAll("input").forEach(i => i.value = "")
 document.querySelectorAll("select").forEach(i => i.selectedIndex = 0)
