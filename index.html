@@ -465,11 +465,15 @@ document.getElementById("userinfo").innerHTML =
 
 window.sendData = async function(){
 
+    const loadFileEl = document.getElementById("loadfile");
+    const selectedFileId = loadFileEl.value;
+    const selectedFileName = (loadFileEl.selectedOptions && loadFileEl.selectedOptions[0])
+        ? loadFileEl.selectedOptions[0].text
+        : (loadFileEl.options[loadFileEl.selectedIndex]?.text || "");
 
-    let combo = document.getElementById("loadfile").value;
     let filetype = document.getElementById("filetype").value;
 
-    if(combo == "")
+    if(selectedFileId == "")
     {
         alert("Vui lòng chọn mẫu");
         return;
@@ -492,7 +496,7 @@ let time = now.getFullYear() + "-" +
 
 let text =
 "📋 FORM HIỆU CHUẨN\n\n"+
-"Chọn mẫu: "+loadfile.value+"\n"+
+"Chọn mẫu: "+selectedFileName+"\n"+
 "Tên đối tượng: "+ten.value+"\n"+
 "Nơi sản xuất: "+nsx.value+"\n"+
 "Model: "+model.value+"\n"+
@@ -536,7 +540,8 @@ const db = getFirestore(app);
 
 try {
  addDoc(collection(db, "Cert"), {
-  mau: loadfile.value,
+  mau: selectedFileName,
+  mau_id: loadfile.value,
   ten_doi_tuong: ten.value,
   noi_san_xuat: nsx.value,
   model: model.value,
