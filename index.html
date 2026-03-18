@@ -169,19 +169,19 @@ font-weight:bold;
 <div class="row">
 <div class="col">
 <label>Ngày HC</label>
-<input id="ngayhc" type="date">
+<input id="ngayhc" placeholder="dd-MM-yyyy">
 </div>
 
 <div class="col">
 <label>Ngày HC tới</label>
-<input id="ngayhctoi" type="date">
+<input id="ngayhctoi" placeholder="dd-MM-yyyy">
 </div>
 </div>
 
 <div class="row">
 <div class="col">
 <label>Ngày ký</label>
-<input id="ngayky" type="date">
+<input id="ngayky" placeholder="dd-MM-yyyy">
 </div>
 
 <div class="col">
@@ -497,10 +497,7 @@ let time = now.getFullYear() + "-" +
            String(now.getHours()).padStart(2,'0') + ":" +
            String(now.getMinutes()).padStart(2,'0') + ":" +
            String(now.getSeconds()).padStart(2,'0');
-function formatDate(str) {
-    let [year, month, day] = str.split("-");
-    return `${day}-${month}-${year}`;
-}
+
 let text =
 "📋 FORM HIỆU CHUẨN\n\n"+
 "Chọn mẫu: "+selectedFileName+"\n"+
@@ -512,9 +509,9 @@ let text =
 "Mã QL: "+maql.value+"\n"+
 "Phạm vi đo: "+phamvi.value+"\n"+
 "Độ phân giải: "+dophangiai.value+"\n"+
-"Ngày HC: "+formatDate(ngayhc.value)+"\n"+
-"Ngày HC tới: "+formatDate(ngayhctoi.value)+"\n"+
-"Ngày ký: "+formatDate(ngayky.value)+"\n"+
+"Ngày HC: "+ngayhc.value+"\n"+
+"Ngày HC tới: "+ngayhctoi.value+"\n"+
+"Ngày ký: "+ngayky.value+"\n"+
 "Nơi HC: "+noihc.value+"\n"+
 "Tên cơ sở: "+coso.value+"\n"+
 "Địa chỉ: "+diachi.value+"\n"+
@@ -558,9 +555,9 @@ try {
   ma_ql: maql.value,
   pham_vi_do: phamvi.value,
   do_phan_giai: dophangiai.value,
-  ngay_hieu_chuan:formatDate (ngayhc.value),
-  ngay_hc_toi: formatDate(ngayhctoi.value),
-  ngay_ky: formatDate(ngayky.value),
+  ngay_hieu_chuan: ngayhc.value,
+  ngay_hc_toi: ngayhctoi.value,
+  ngay_ky: ngayky.value,
   noi_hieu_chuan: noihc.value,
   ten_co_so: coso.value,
   dia_chi: diachi.value,
