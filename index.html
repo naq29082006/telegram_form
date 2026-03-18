@@ -70,6 +70,14 @@ flex:1;
 margin-bottom:12px;
 }
 
+.singlefolder{
+margin-bottom:12px;
+}
+
+.singlefile{
+margin-bottom:12px;
+}
+
 button{
 width:100%;
 padding:14px;
@@ -93,11 +101,22 @@ font-weight:bold;
 
 <h2>Thông Tin Hiệu Chuẩn</h2>
 
-<div class="single">
-<label>Chọn mẫu</label>
-<select id="loadfile"><option value="" selected hidden>-- Chọn mẫu Cert --</option>
+<div class="singlefolder">
+<label>Chọn folder</label>
+<select id="loadfolder"><option value="" selected hidden>-- Chọn Folder --</option>
 </select>
 </div>
+
+<div class="single">
+  <label>Tìm mẫu</label>
+  <input id="searchFile" placeholder="Nhập để tìm...">
+  </div>
+
+<div class="singlefile">
+  <label>Chọn mẫu</label>
+  <select id="loadfile"><option value="" selected hidden>-- Chọn mẫu Cert --</option>
+  </select>
+  </div>
 
 <div class="row">
 <div class="col">
@@ -271,46 +290,165 @@ const data=await res.json();
 return data.access_token;
 
 }
+let allFolder = [];
+let allFiles = [];
 
-async function loadFiles()
-{
+function renderFolders(files) {
+    const combo = document.getElementById("loadfolder");
+    combo.innerHTML = "";
 
-const token=await getToken();
+    const first = document.createElement("option");
+    first.text = "-- Chọn Folder --";
+    first.value = "";
+    first.disabled = true;
+    first.selected = true;
+    combo.appendChild(first);
 
-const url="https://www.googleapis.com/drive/v3/files?q='"+folderId+"' in parents and mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'&fields=files(id,name)&pageSize=1000";
+    for (let i = 0; i < files.length; i++) {
+        const op = document.createElement("option");
+        op.value = files[i].id;   // value = ID folder
+        op.text = files[i].name;  // text = tên folder
+        combo.appendChild(op);
+    }
+}
 
-const res=await fetch(url,{
-headers:{Authorization:"Bearer "+token}
+function renderFiles(files) {
+    const combo = document.getElementById("loadfile");
+    combo.innerHTML = "";
+
+    const first = document.createElement("option");
+    first.text = "-- Chọn mẫu Cert --";
+    first.value = "";
+    first.disabled = true;
+    first.selected = true;
+    combo.appendChild(first);
+
+    for (let i = 0; i < files.length; i++) {
+        const op = document.createElement("option");
+        op.value = files[i].id;   // value = ID file
+        op.text = files[i].name;  // text = tên file
+        combo.appendChild(op);
+    }
+}
+
+function getNumber(name) {
+    const match = name.match(/^\d+/);
+    if (match) return parseInt(match[0]);
+    return Number.MAX_SAFE_INTEGER;
+}
+
+async function loadFolder() {
+    const token = await getToken();
+
+    const url =
+        "https://www.googleapis.com/drive/v3/files" +
+        "?q=" + encodeURIComponent(
+            "'" + folderId + "' in parents and trashed=false and " +
+            "mimeType='application/vnd.google-apps.folder'"
+        ) +
+        "&fields=files(id,name)" +
+        "&pageSize=1000";
+
+    const res = await fetch(url, {
+        headers: { Authorization: "Bearer " + token }
+    });
+
+    const data = await res.json();
+
+    allFolder = (data.files || []).sort((a, b) => {
+        const numA = getNumber(a.name);
+        const numB = getNumber(b.name);
+        if (numA !== numB) return numA - numB;
+        return a.name.localeCompare(b.name);
+    });
+
+    renderFolders(allFolder);
+    renderFiles([]);
+}
+
+async function loadFilesInFolder(parentId) {
+    const token = await getToken();
+
+    const url =
+        "https://www.googleapis.com/drive/v3/files" +
+        "?q=" + encodeURIComponent(
+            "'" + parentId + "' in parents and trashed=false and " +
+            "mimeType!='application/vnd.google-apps.folder'"
+        ) +
+        "&fields=files(id,name,mimeType)" +
+        "&pageSize=1000";
+
+    const res = await fetch(url, {
+        headers: { Authorization: "Bearer " + token }
+    });
+
+    const data = await res.json();
+
+    // chỉ giữ file có tên .xlsx (không phân biệt hoa thường)
+    allFiles = (data.files || [])
+        .filter(f => (f.name || "").toLowerCase().endsWith(".xlsx"))
+        .sort((a, b) =>
+            a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" })
+        );
+
+    renderFiles(allFiles);
+}
+
+async function downloadXlsx(fileId, fileName, mimeType) {
+    const token = await getToken();
+
+    let url;
+    if (mimeType === "application/vnd.google-apps.spreadsheet") {
+        url = `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}/export?mimeType=` +
+            encodeURIComponent("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        if (!fileName.toLowerCase().endsWith(".xlsx")) fileName += ".xlsx";
+    } else {
+        url = `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?alt=media`;
+        if (!fileName.toLowerCase().endsWith(".xlsx")) fileName += ".xlsx";
+    }
+
+    const res = await fetch(url, {
+        headers: { Authorization: "Bearer " + token }
+    });
+
+    if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`Download failed: ${res.status} ${t}`);
+    }
+
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+document.getElementById("loadfolder").addEventListener("change", async function () {
+    const folderIdSelected = this.value;
+    if (!folderIdSelected) return;
+    await loadFilesInFolder(folderIdSelected);
 });
 
-const data=await res.json();
+document.getElementById("searchFile").addEventListener("input", function () {
+    const keyword = this.value.toLowerCase().trim();
+    if (!keyword) {
+        renderFiles(allFiles);
+        return;
+    }
+    const filtered = allFiles.filter(f => f.name.toLowerCase().includes(keyword));
+    renderFiles(filtered);
+});
 
-const combo=document.getElementById("loadfile");
+// Nếu muốn chọn file là tải luôn, bỏ comment 3 dòng dưới:
+// document.getElementById("loadfile").addEventListener("change", async function () {
+//     const f = allFiles.find(x => x.id === this.value);
+//     if (f) await downloadXlsx(f.id, f.name, f.mimeType);
+// });
 
-combo.innerHTML="";
-// thêm các file từ drive
-let first = document.createElement("option");
-first.text = "-- Chọn mẫu Cert --";
-first.value = "";
-first.selected = true;
-first.disabled = true;
-
-combo.appendChild(first);
-
-// thêm file
-for(let i = 0; i < data.files.length; i++)
-{
-    let op = document.createElement("option");
-
-    op.value = data.files[i].name;
-    op.text  = data.files[i].name;
-
-    combo.appendChild(op);
-}
-
-}
-
-loadFiles();
+loadFolder();
 let tg = window.Telegram.WebApp
 tg.expand()
 
