@@ -429,7 +429,9 @@ async function downloadXlsx(fileId, fileName, mimeType) {
 document.getElementById("loadfolder").addEventListener("change", async function () {
     const folderIdSelected = this.value;
     if (!folderIdSelected) return;
+    document.getElementById("searchFile").value="";
     await loadFilesInFolder(folderIdSelected);
+    
 });
 
 document.getElementById("searchFile").addEventListener("input", function () {
