@@ -579,12 +579,11 @@ let text =
 "Loại file: "+filetype+"\n"+
 "In file: "+inFile+"\n"+
 "Time: "+time+"\n"+
-"User: "+username+"\n"+
+"User: @"+username+"\n"+
 "Full name: "+fullname+"\n"+
 "ID: "+chat_id
-
-navigator.clipboard.writeText(text);
-alert("Đã copy!");
+Telegram.WebApp.sendData(text);
+alert("Đã gửi!");
 document.getElementById("infile").checked=false;
 document.querySelectorAll("input").forEach(i => i.value = "")
 document.querySelectorAll("select").forEach(i => i.selectedIndex = 0)
