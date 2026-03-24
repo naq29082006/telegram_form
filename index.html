@@ -2,68 +2,593 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
-body{
-    font-family: Arial;
-    padding:20px;
-    background:#f2f2f2;
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
 }
 
-input{
-    width:100%;
-    padding:10px;
-    margin:10px 0;
-    border-radius:6px;
-    border:1px solid #ccc;
+body{
+font-family: Arial, sans-serif;
+background:#f2f4f8;
+}
+
+.container{
+width:100%;
+max-width:480px;
+margin:20px auto;
+background:#ffffff;
+padding:20px;
+border-radius:14px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.userbox{
+background:#e8f4ff;
+padding:10px;
+border-radius:8px;
+margin-bottom:15px;
+font-size:14px;
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+label{
+font-size:13px;
+font-weight:bold;
+margin-bottom:4px;
+display:block;
+}
+
+input, select{
+width:100%;
+padding:10px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:14px;
+background:white;
+}
+
+.row{
+display:flex;
+gap:12px;
+margin-bottom:12px;
+}
+
+.col{
+flex:1;
+}
+
+.single{
+margin-bottom:12px;
+}
+
+.singlefolder{
+margin-bottom:12px;
+}
+
+.singlefile{
+margin-bottom:12px;
 }
 
 button{
-    width:100%;
-    padding:12px;
-    background:#0088cc;
-    color:white;
-    border:none;
-    border-radius:6px;
-    font-size:16px;
+width:100%;
+padding:14px;
+margin-top:16px;
+background:#2AABEE;
+color:white;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:bold;
+}
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    user-select: none;
+    margin-top: 30px;
+    color: #333;
+}
+
+.checkbox-container input {
+    display: none;
+}
+
+.checkmark {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #555;
+    border-radius: 6px;
+    position: relative;
+    transition: 0.2s;
+}
+
+.checkbox-container input:checked + .checkmark {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+/* dấu tick */
+.checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked + .checkmark::after {
+    display: block;
+}
+
+.checkmark::after {
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
 }
 </style>
+
 </head>
 
 <body>
 
-<h3>Test WebApp</h3>
+<div class="container">
 
-<input id="name" placeholder="Nhập tên">
-<input id="phone" placeholder="Nhập số điện thoại">
+<div id="userinfo" class="userbox"></div>
 
-<button onclick="sendData()">Gửi về bot</button>
+<h2>Thông Tin Hiệu Chuẩn</h2>
 
-<script>
-const tg = window.Telegram.WebApp;
+<div class="singlefolder">
+<label>Chọn folder</label>
+<select id="loadfolder"><option value="" selected hidden>-- Chọn Folder --</option>
+</select>
+</div>
 
-// 🔥 BẮT BUỘC
-tg.ready();
-tg.expand();
+<div class="single">
+  <label>Tìm mẫu</label>
+  <input id="searchFile" placeholder="Nhập để tìm...">
+  </div>
 
-function sendData() {
+<div class="singlefile">
+  <label>Chọn mẫu</label>
+  <select id="loadfile"><option value="" selected hidden>-- Chọn mẫu Cert --</option>
+  </select>
+  </div>
 
-    let name = document.getElementById("name").value;
-    let phone = document.getElementById("phone").value;
+<div class="row">
+<div class="col">
+<label>Tên đối tượng</label>
+<input id="ten">
+</div>
 
-    let data = {
-        name: name,
-        phone: phone,
-        time: new Date().toLocaleString()
-    };
+<div class="col">
+<label>Nơi sản xuất</label>
+<input id="nsx">
+</div>
+</div>
 
-    // 🔥 gửi về bot
-    tg.sendData(JSON.stringify(data));
+<div class="row">
+<div class="col">
+<label>Model</label>
+<input id="model">
+</div>
 
-    // debug
-    alert("Đã gửi!");
+<div class="col">
+<label>Serial</label>
+<input id="serial">
+</div>
+</div>
+
+<div class="row">
+<div class="col">
+<label>Số (No)</label>
+<input id="so">
+</div>
+
+<div class="col">
+<label>Mã QL</label>
+<input id="maql">
+</div>
+</div>
+
+<div class="row">
+<div class="col">
+<label>Phạm vi đo</label>
+<input id="phamvi">
+</div>
+
+<div class="col">
+<label>Độ phân giải</label>
+<input id="dophangiai">
+</div>
+</div>
+
+<div class="row">
+<div class="col">
+<label>Ngày HC</label>
+<input id="ngayhc" placeholder="dd-MM-yyyy">
+</div>
+
+<div class="col">
+<label>Ngày HC tới</label>
+<input id="ngayhctoi" placeholder="dd-MM-yyyy">
+</div>
+</div>
+
+<div class="row">
+<div class="col">
+<label>Ngày ký</label>
+<input id="ngayky" placeholder="dd-MM-yyyy">
+</div>
+
+<div class="col">
+<label>Nơi HC</label>
+<input id="noihc">
+</div>
+</div>
+
+<div class="row">
+<div class="col">
+<label>Tên cơ sở</label>
+<input id="coso">
+</div>
+
+<div class="col">
+<label>Địa chỉ</label>
+<input id="diachi">
+</div>
+</div>
+
+
+
+<div class="single" style="display:flex; align-items:center; gap:30px;">
+    
+    <div style="flex:1;">
+        <label>Chức năng</label>
+        <select id="filetype">
+            <option value="" disabled selected>-- Chọn --</option>
+            <option value="xlsx">xlsx</option>
+            <option value="pdf">pdf</option>
+            <option value="xlsx + lock">xlsx + lock</option>
+            <option value="xlsx + lock + pdf">xlsx + lock + pdf</option>
+        </select>
+    </div>
+
+    <label class="checkbox-container">
+        <input type="checkbox" id="infile">
+        <span class="checkmark"></span>
+        In file
+    </label>
+
+</div>
+
+<button onclick="sendData()">Copy</button>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.8.6/jsrsasign-all-min.js"></script>
+
+<script type="module">
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const credentials = {
+"type":"service_account",
+"project_id":"midyear-guild-448806-d7",
+"private_key":`-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDANzl5Qb1ijuRe
+t2+xPq2wxmQoGkQYxSAWL324hfY/Oji+OFz4w0lYTe2TUSeigVmrvl1isWVoBQd0
+lGtM1xv4GYxKMi9rpfFBsnBi9mX2HHUQbwcHWkaY9oEB68DU796r5UEeGak0FU5T
+qmc19YFxlvEcqAR1dj9+lMhF6ZXsFvNhyYpsX3Evpdi0NywnsKpNqplyEtvJgmRL
+KlGXcFRhCOzR11UZGx/TZIl4nO7SviXunkh4dTXKG0/bgyuLbHJMu79E5fZ8fpHR
+4FmvrYaI4EJ4xRSB99Dhv3DOVQIrF44UMfpjQ7e77dehO20GcqjooygLNbkzW0iR
+TapMfTPNAgMBAAECggEABEf2mWhzww3dsO0IVCafkGVgIQiHZb8rj3LwAOZy7UZA
+XJ7oFd5Q9DeKyBIxqMvqvF7ZY55XMjGSe0U8UpIj8asCqzsM6qqKgg/AXbk73Mxr
+dbnoqoBB5vGZPqVf6R436RTfwL+KO4+8lokgErKXdyPegOiObjNRB2JhnN+uqCXH
+cIDNb26Hmnb8HyhZAJUGmRrMwZXGjq5tmre1O6FJwV8NuywAfY0/2k90BhQW/Lwb
+cfJgfPe1CMMsdHtpvAmPnI9NJhDRcZi+XJp5S2jNXQdvWlOICaS/3u9dGT7juquX
+0fIf0ObIfo3XETQm7UAmQ/2R4dtSaryp1XEE8cvPwQKBgQD3dNrQEIHkL1iFsYW1
+95L3XzjTF1GUfV6OqpZ7V7o6GzClYQF0g7SahrTra1KIUeb+ilY0Wf8r99XmR2n9
+mHVcGmXu9UX+fkOrIQSEA3OLLI8N1SKpSJS4oWNMT3oKIEULnLagyHHfQuB7T6C/
+C3XpDvZ2fDutAAqHx2iKNeRgfQKBgQDG2h/Jk3fDqbw9EA6Pzl1UyV5y3QeGARQs
+4juR2VBBNYJh01SQC1yR4ytDDVREzVlfgTFC08W4XI2Sy5nQVS+fFzmC5ylDKNCv
+Ym7hrX7jes+H7eZnRs/bzL3iGBVRNrp0ZmvIYi7Yh9ezl9XvnqoNwQhw4mxKZHeH
+iX84B/dRkQKBgEdixITlXjNPnT/kOGiIJTOLmr76qSQnDpIlkAfBBQ4iLeRnmZ3d
+KMqzNZn8efCtf+/KRJgRplUux9wImgD4bFLHosROqYSDNE431i+nNzvc/N/Grpsb
+PxwMIrMu8kvdh02URfMYIBGCH3QzQnIagkdbc6o2qJh9vIvy8Kt+ZIWZAoGBAK8K
+75Rn5bMtRPCTo93fELVEFYoTGz5Q0Mu50ipPG6BrU/x9JSEvfytEx55cq2NtSFET
+zqM++/uQLWedJicH9cWbkhqzFdVyplDc2zJ5oQrp3qmPN5SN9wdLMZNHE+zLulIg
+npxkIUymN7B15fLqvlMhKycDicPqsHV1CbHvATyhAoGAXOB45jjNS1Huvy9d6RPY
+c9FrAt/AAByAMkiliCXrkyMN2al9p/ZusuqnGQfffXGDMdmFvYyrgaxMQ25a3I7y
+D7M+B9yce1xHwGzHYz4Cmq06jlmS1brTzqJMS1neDDxxI/smKthZidc9OvwQdwEZ
+ffJU+FTAwmzjoWcrqxPg694=
+-----END PRIVATE KEY-----`,
+"client_email":"demo-46@midyear-guild-448806-d7.iam.gserviceaccount.com"
+};
+
+const folderId="1sA7xwc_yddEIcOQzherT8a0rKYJTWCYh";
+
+async function getToken()
+{
+
+const header={alg:"RS256",typ:"JWT"};
+
+const now=Math.floor(Date.now()/1000);
+
+const payload={
+iss:credentials.client_email,
+scope:"https://www.googleapis.com/auth/drive.readonly",
+aud:"https://oauth2.googleapis.com/token",
+iat:now,
+exp:now+3600
+};
+
+const jwt=KJUR.jws.JWS.sign(
+"RS256",
+JSON.stringify(header),
+JSON.stringify(payload),
+credentials.private_key
+);
+
+const res=await fetch("https://oauth2.googleapis.com/token",{
+method:"POST",
+headers:{"Content-Type":"application/x-www-form-urlencoded"},
+body:"grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion="+jwt
+});
+
+const data=await res.json();
+
+return data.access_token;
+
 }
+let allFolder = [];
+let allFiles = [];
+
+function renderFolders(files) {
+    const combo = document.getElementById("loadfolder");
+    combo.innerHTML = "";
+
+    const first = document.createElement("option");
+    first.text = "-- Chọn Folder --";
+    first.value = "";
+    first.disabled = true;
+    first.selected = true;
+    combo.appendChild(first);
+
+    for (let i = 0; i < files.length; i++) {
+        const op = document.createElement("option");
+        op.value = files[i].id;   // value = ID folder
+        op.text = files[i].name;  // text = tên folder
+        combo.appendChild(op);
+    }
+}
+
+function renderFiles(files) {
+    const combo = document.getElementById("loadfile");
+    combo.innerHTML = "";
+
+    const first = document.createElement("option");
+    first.text = "-- Chọn mẫu Cert --";
+    first.value = "";
+    first.disabled = true;
+    first.selected = true;
+    combo.appendChild(first);
+
+    for (let i = 0; i < files.length; i++) {
+        const op = document.createElement("option");
+        op.value = files[i].id;   // value = ID file
+        op.text = files[i].name;  // text = tên file
+        combo.appendChild(op);
+    }
+}
+
+function getNumber(name) {
+    const match = name.match(/^\d+/);
+    if (match) return parseInt(match[0]);
+    return Number.MAX_SAFE_INTEGER;
+}
+
+async function loadFolder() {
+    const token = await getToken();
+
+    const url =
+        "https://www.googleapis.com/drive/v3/files" +
+        "?q=" + encodeURIComponent(
+            "'" + folderId + "' in parents and trashed=false and " +
+            "mimeType='application/vnd.google-apps.folder'"
+        ) +
+        "&fields=files(id,name)" +
+        "&pageSize=1000";
+
+    const res = await fetch(url, {
+        headers: { Authorization: "Bearer " + token }
+    });
+
+    const data = await res.json();
+
+    allFolder = (data.files || []).sort((a, b) => {
+        const numA = getNumber(a.name);
+        const numB = getNumber(b.name);
+        if (numA !== numB) return numA - numB;
+        return a.name.localeCompare(b.name);
+    });
+
+    renderFolders(allFolder);
+    renderFiles([]);
+}
+
+async function loadFilesInFolder(parentId) {
+    const token = await getToken();
+
+    const url =
+        "https://www.googleapis.com/drive/v3/files" +
+        "?q=" + encodeURIComponent(
+            "'" + parentId + "' in parents and trashed=false and " +
+            "mimeType!='application/vnd.google-apps.folder'"
+        ) +
+        "&fields=files(id,name,mimeType)" +
+        "&pageSize=1000";
+
+    const res = await fetch(url, {
+        headers: { Authorization: "Bearer " + token }
+    });
+
+    const data = await res.json();
+
+    // chỉ giữ file có tên .xlsx (không phân biệt hoa thường)
+    allFiles = (data.files || [])
+        .filter(f => (f.name || "").toLowerCase().endsWith(".xlsx"))
+        .sort((a, b) =>
+            a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" })
+        );
+
+    renderFiles(allFiles);
+}
+
+async function downloadXlsx(fileId, fileName, mimeType) {
+    const token = await getToken();
+
+    let url;
+    if (mimeType === "application/vnd.google-apps.spreadsheet") {
+        url = `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}/export?mimeType=` +
+            encodeURIComponent("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        if (!fileName.toLowerCase().endsWith(".xlsx")) fileName += ".xlsx";
+    } else {
+        url = `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?alt=media`;
+        if (!fileName.toLowerCase().endsWith(".xlsx")) fileName += ".xlsx";
+    }
+
+    const res = await fetch(url, {
+        headers: { Authorization: "Bearer " + token }
+    });
+
+    if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`Download failed: ${res.status} ${t}`);
+    }
+
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+document.getElementById("loadfolder").addEventListener("change", async function () {
+    const folderIdSelected = this.value;
+    if (!folderIdSelected) return;
+    document.getElementById("searchFile").value="";
+    await loadFilesInFolder(folderIdSelected);
+    
+});
+
+document.getElementById("searchFile").addEventListener("input", function () {
+    const keyword = this.value.toLowerCase().trim();
+    if (!keyword) {
+        renderFiles(allFiles);
+        return;
+    }
+    const filtered = allFiles.filter(f => f.name.toLowerCase().includes(keyword));
+    renderFiles(filtered);
+});
+
+// Nếu muốn chọn file là tải luôn, bỏ comment 3 dòng dưới:
+// document.getElementById("loadfile").addEventListener("change", async function () {
+//     const f = allFiles.find(x => x.id === this.value);
+//     if (f) await downloadXlsx(f.id, f.name, f.mimeType);
+// });
+
+loadFolder();
+let tg = window.Telegram.WebApp
+tg.expand()
+
+let user = tg.initDataUnsafe.user || {}
+
+let chat_id = user.id || ""
+let username = user.username || ""
+let fullname = (user.first_name || "") + " " + (user.last_name || "")
+
+document.getElementById("userinfo").innerHTML =
+"👤 Người dùng: <b>"+fullname+"</b><br>"+
+"🔗 Username: @"+username+"<br>"+
+"🆔 Chat ID: "+chat_id
+
+window.sendData = async function(){
+
+    const loadFileEl = document.getElementById("loadfile");
+    const selectedFileId = loadFileEl.value;
+    const selectedFileName = (loadFileEl.selectedOptions && loadFileEl.selectedOptions[0])
+        ? loadFileEl.selectedOptions[0].text
+        : (loadFileEl.options[loadFileEl.selectedIndex]?.text || "");
+
+    let filetype = document.getElementById("filetype").value;
+    const inFile = document.getElementById("infile").checked;
+    if(selectedFileId == "")
+    {
+        alert("Vui lòng chọn mẫu");
+        return;
+    }
+
+    if(filetype == "")
+    {
+        alert("Vui lòng chọn loại file");
+        return;
+    }
+
+    let now = new Date();
+
+let time = now.getFullYear() + "-" +
+           String(now.getMonth()+1).padStart(2,'0') + "-" +
+           String(now.getDate()).padStart(2,'0') + " " +
+           String(now.getHours()).padStart(2,'0') + ":" +
+           String(now.getMinutes()).padStart(2,'0') + ":" +
+           String(now.getSeconds()).padStart(2,'0');
+
+let text =
+"📋 FORM HIỆU CHUẨN\n\n"+
+"Chọn mẫu: "+selectedFileName+"\n"+
+"Mẫu ID: "+selectedFileId+"\n"+
+"Tên đối tượng: "+ten.value+"\n"+
+"Nơi sản xuất: "+nsx.value+"\n"+
+"Model: "+model.value+"\n"+
+"Serial: "+serial.value+"\n"+
+"Số (No): "+so.value+"\n"+
+"Mã QL: "+maql.value+"\n"+
+"Phạm vi đo: "+phamvi.value+"\n"+
+"Độ phân giải: "+dophangiai.value+"\n"+
+"Ngày HC: "+ngayhc.value+"\n"+
+"Ngày HC tới: "+ngayhctoi.value+"\n"+
+"Ngày ký: "+ngayky.value+"\n"+
+"Nơi HC: "+noihc.value+"\n"+
+"Tên cơ sở: "+coso.value+"\n"+
+"Địa chỉ: "+diachi.value+"\n"+
+"Loại file: "+filetype+"\n"+
+"In file: "+inFile+"\n"+
+"Time: "+time+"\n"+
+"User: @"+username+"\n"+
+"Full name: "+fullname+"\n"+
+"ID: "+chat_id
+Telegram.WebApp.sendData(text);
+alert("Đã gửi!");
+document.getElementById("infile").checked=false;
+document.querySelectorAll("input").forEach(i => i.value = "")
+document.querySelectorAll("select").forEach(i => i.selectedIndex = 0)
+}
+
 </script>
 
 </body>
