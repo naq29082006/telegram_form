@@ -274,7 +274,7 @@ font-weight:bold;
 
 </div>
 
-<button onclick="sendData()">Gửi</button>
+<button onclick="sendData()">Copy</button>
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.8.6/jsrsasign-all-min.js"></script>
@@ -579,62 +579,12 @@ let text =
 "In file: "+inFile+"\n"+
 "Time: "+time+"\n"+
 "User: @"+username+"\n"+
+"Full name: "+fullname+"\n"+
 "ID: "+chat_id
 
-fetch("https://api.telegram.org/bot8798057505:AAFJXWFxx2YdPWme-3JDhiYEawFyCRJN788/sendMessage",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-chat_id:chat_id,
-text:text
-})
-})
-const firebaseConfig = {
-  apiKey: "AIzaSyApzy_y_8NXU6U4U35rZsTQRvvsjQypVEE",
-  authDomain: "hip-beaker-448806-r2.firebaseapp.com",
-  projectId: "hip-beaker-448806-r2",
-  storageBucket: "hip-beaker-448806-r2.firebasestorage.app",
-  messagingSenderId: "920851338182",
-  appId: "1:920851338182:web:80a04235f1b529a4e658c7",
-  measurementId: "G-QPS1TDZLDF"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-try {
- addDoc(collection(db, "Cert"), {
-  mau: selectedFileName,
-  mau_id: loadfile.value,
-  folder_id: loadfolder.value,
-  ten_doi_tuong: ten.value,
-  noi_san_xuat: nsx.value,
-  model: model.value,
-  serial: serial.value,
-  so: so.value,
-  ma_ql: maql.value,
-  pham_vi_do: phamvi.value,
-  do_phan_giai: dophangiai.value,
-  ngay_hieu_chuan: ngayhc.value,
-  ngay_hc_toi: ngayhctoi.value,
-  ngay_ky: ngayky.value,
-  noi_hieu_chuan: noihc.value,
-  ten_co_so: coso.value,
-  dia_chi: diachi.value,
-  loai_file: filetype,
-  in_file:inFile,
-  username: username,
-  chat_id: chat_id,
-  full_name:fullname,
-  time: time
-});
-  } catch (e) {
-    alert("Lỗi:", e);
-    return;
-  }
-document.getElementById("infile").checked = false;
-alert("Đã gửi form thành công!")
+navigator.clipboard.writeText(text);
+alert("Đã copy!");
+document.getElementById("infile").checked=false;
 document.querySelectorAll("input").forEach(i => i.value = "")
 document.querySelectorAll("select").forEach(i => i.selectedIndex = 0)
 }
