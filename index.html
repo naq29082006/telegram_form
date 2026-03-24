@@ -146,8 +146,6 @@ font-weight:bold;
 
 <div class="container">
 
-<div id="userinfo" class="userbox"></div>
-
 <h2>Thông Tin Hiệu Chuẩn</h2>
 
 <div class="singlefolder">
@@ -274,7 +272,7 @@ font-weight:bold;
 
 </div>
 
-<button onclick="sendData()">Copy</button>
+<button onclick="sendData()">Gửi</button>
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.8.6/jsrsasign-all-min.js"></script>
@@ -513,19 +511,19 @@ document.getElementById("searchFile").addEventListener("input", function () {
 // });
 
 loadFolder();
-let tg = window.Telegram.WebApp
-tg.expand()
+// let tg = window.Telegram.WebApp
+// tg.expand()
 
-let user = tg.initDataUnsafe.user || {}
+// let user = tg.initDataUnsafe.user || {}
 
-let chat_id = user.id || ""
-let username = user.username || ""
-let fullname = (user.first_name || "") + " " + (user.last_name || "")
+// let chat_id = user.id || ""
+// let username = user.username || ""
+// let fullname = (user.first_name || "") + " " + (user.last_name || "")
 
-document.getElementById("userinfo").innerHTML =
-"👤 Người dùng: <b>"+fullname+"</b><br>"+
-"🔗 Username: @"+username+"<br>"+
-"🆔 Chat ID: "+chat_id
+// document.getElementById("userinfo").innerHTML =
+// "👤 Người dùng: <b>"+fullname+"</b><br>"+
+// "🔗 Username: @"+username+"<br>"+
+// "🆔 Chat ID: "+chat_id
 
 window.sendData = async function(){
 
@@ -557,7 +555,6 @@ let time = now.getFullYear() + "-" +
            String(now.getHours()).padStart(2,'0') + ":" +
            String(now.getMinutes()).padStart(2,'0') + ":" +
            String(now.getSeconds()).padStart(2,'0');
-
 let text =
 "📋 FORM HIỆU CHUẨN\n\n"+
 "Chọn mẫu: "+selectedFileName+"\n"+
@@ -578,17 +575,13 @@ let text =
 "Địa chỉ: "+diachi.value+"\n"+
 "Loại file: "+filetype+"\n"+
 "In file: "+inFile+"\n"+
-"Time: "+time+"\n"+
-"User: @"+username+"\n"+
-"Full name: "+fullname+"\n"+
-"ID: "+chat_id
+"Time: "+time+"\n"
 Telegram.WebApp.sendData(text);
 alert("Đã gửi!");
 document.getElementById("infile").checked=false;
 document.querySelectorAll("input").forEach(i => i.value = "")
 document.querySelectorAll("select").forEach(i => i.selectedIndex = 0)
 }
-
 </script>
 
 </body>
