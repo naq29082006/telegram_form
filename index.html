@@ -444,9 +444,12 @@ async function loadFilesInFolder(parentId) {
 
     const data = await res.json();
 
-    // chỉ giữ file có tên .xlsx (không phân biệt hoa thường)
+    // ✅ giữ cả .xlsx và .xlsm
     allFiles = (data.files || [])
-        .filter(f => (f.name || "").toLowerCase().endsWith(".xlsx"))
+        .filter(f => {
+            const name = (f.name || "").toLowerCase();
+            return name.endsWith(".xlsx") || name.endsWith(".xlsm");
+        })
         .sort((a, b) =>
             a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" })
         );
