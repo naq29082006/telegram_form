@@ -77,6 +77,9 @@ margin-bottom:12px;
 .singlefile{
 margin-bottom:12px;
 }
+.singlethietbi{
+margin-bottom:12px;
+}
 
 button{
 width:100%;
@@ -153,6 +156,11 @@ font-weight:bold;
 <select id="loadfolder"><option value="" selected hidden>-- Chọn Folder --</option>
 </select>
 </div>
+<div class="singlethietbi">
+    <label>Chọn thiết bị</label>
+    <select id="loadthietbi"><option value="" selected hidden>-- Chọn thiết bị --</option>
+    </select>
+    </div>
 
 <div class="single">
   <label>Tìm mẫu</label>
@@ -351,6 +359,7 @@ return data.access_token;
 
 }
 let allFolder = [];
+let allChildFolder = [];
 let allFiles = [];
 
 function renderFolders(files) {
@@ -371,7 +380,24 @@ function renderFolders(files) {
         combo.appendChild(op);
     }
 }
+function renderChildFolders(files) {
+    const combo = document.getElementById("loadthietbi");
+    combo.innerHTML = "";
 
+    const first = document.createElement("option");
+    first.text = "-- Chọn thiết bị --";
+    first.value = "";
+    first.disabled = true;
+    first.selected = true;
+    combo.appendChild(first);
+
+    for (let i = 0; i < files.length; i++) {
+        const op = document.createElement("option");
+        op.value = files[i].id;   // value = ID folder
+        op.text = files[i].name;  // text = tên folder
+        combo.appendChild(op);
+    }
+}
 function renderFiles(files) {
     const combo = document.getElementById("loadfile");
     combo.innerHTML = "";
@@ -398,6 +424,7 @@ function getNumber(name) {
 }
 
 async function loadFolder() {
+    renderChildFolders([]);
     const token = await getToken();
 
     const url =
@@ -423,9 +450,36 @@ async function loadFolder() {
     });
 
     renderFolders(allFolder);
-    renderFiles([]);
+    
 }
+async function loadChildFolders(parentId) {
+    renderFiles([]);
+    const token = await getToken();
 
+    const url =
+        "https://www.googleapis.com/drive/v3/files" +
+        "?q=" + encodeURIComponent(
+            "'" + parentId + "' in parents and trashed=false and " +
+            "mimeType='application/vnd.google-apps.folder'"
+        ) +
+        "&fields=files(id,name)" +
+        "&pageSize=1000";
+
+    const res = await fetch(url, {
+        headers: { Authorization: "Bearer " + token }
+    });
+
+    const data = await res.json();
+
+    allChildFolder = (data.files || []).sort((a, b) => {
+        const numA = getNumber(a.name);
+        const numB = getNumber(b.name);
+        if (numA !== numB) return numA - numB;
+        return a.name.localeCompare(b.name);
+    });
+    renderChildFolders(allChildFolder);
+    
+}
 async function loadFilesInFolder(parentId) {
     const token = await getToken();
 
@@ -444,12 +498,9 @@ async function loadFilesInFolder(parentId) {
 
     const data = await res.json();
 
-    // ✅ giữ cả .xlsx và .xlsm
+    // chỉ giữ file có tên .xlsx (không phân biệt hoa thường)
     allFiles = (data.files || [])
-        .filter(f => {
-            const name = (f.name || "").toLowerCase();
-            return name.endsWith(".xlsx") || name.endsWith(".xlsm");
-        })
+        .filter(f => (f.name || "").toLowerCase().endsWith(".xlsx"))
         .sort((a, b) =>
             a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" })
         );
@@ -490,10 +541,16 @@ async function downloadXlsx(fileId, fileName, mimeType) {
 }
 
 document.getElementById("loadfolder").addEventListener("change", async function () {
-    const folderIdSelected = this.value;
-    if (!folderIdSelected) return;
+    const id_folder = this.value;
+    if (!id_folder) return;
+    await loadChildFolders(id_folder);
+    
+});
+document.getElementById("loadthietbi").addEventListener("change", async function () {
+    const id_folder = this.value;
+    if (!id_folder) return;
     document.getElementById("searchFile").value="";
-    await loadFilesInFolder(folderIdSelected);
+    await loadFilesInFolder(id_folder);
     
 });
 
