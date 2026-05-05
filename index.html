@@ -152,8 +152,8 @@ font-weight:bold;
 <h2>Thông Tin Hiệu Chuẩn</h2>
 
 <div class="singlefolder">
-<label>Chọn folder</label>
-<select id="loadfolder"><option value="" selected hidden>-- Chọn Folder --</option>
+<label>Chọn Lĩnh Vực</label>
+<select id="loadfolder"><option value="" selected hidden>-- Chọn Lĩnh Vực --</option>
 </select>
 </div>
 <div class="singlethietbi">
@@ -367,7 +367,7 @@ function renderFolders(files) {
     combo.innerHTML = "";
 
     const first = document.createElement("option");
-    first.text = "-- Chọn Folder --";
+    first.text = "-- Chọn Lĩnh Vực --";
     first.value = "";
     first.disabled = true;
     first.selected = true;
